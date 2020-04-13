@@ -1,0 +1,10 @@
+name: covid_navadmins_search
+title:
+username:
+account: bstrain71
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2024659
+bundleId: 3007626
+url: https://bstrain71.shinyapps.io/covid_navadmins_search/
+when: 1586796520.24621
