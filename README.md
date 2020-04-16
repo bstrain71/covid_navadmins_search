@@ -9,6 +9,7 @@ app.R is the Shiny app. It requires the following to run:
   lsa.rds
   sigma_inverse.rds
   u_transpose.rds
+  highlighter_function.R
   
 
 brute_search_function.R is not used

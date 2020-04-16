@@ -41,6 +41,7 @@ covid_search <- function(userinput){
   #colnames(query_match) <- c("document","score")
   #covid_df$scores <- query_scores[1:dim(lsa)[1]]
   query_scores[1:dim(lsa)[1],dim(full_lsa)[2]]
+  # This returns NaN not zero!
 }
 
 

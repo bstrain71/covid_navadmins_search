@@ -2,6 +2,7 @@ library(shiny)
 library(tm)
 library(RSpectra)
 library(lsa)
+library(stringr)
 
 # Load data
 covid_df <- readRDS("covid_df.rds")
@@ -22,7 +23,8 @@ covid_df <- readRDS("covid_df.rds")
 # the required RDS objects that the function needs
 # to compute LSA.
 source("svd_search_function.R")
-  
+source("highlighter_function.R")
+
 # Define UI
 ui <- fluidPage(
     headerPanel('NAVADMINs Relevant to COVID-19 Search'),
@@ -45,14 +47,15 @@ server <- function(input, output) {
 
   datasetInput <- eventReactive(input$update,{
     covid_df$scores <- covid_search(input$userinput) # runs search function
+    covid_df$scores[is.nan(covid_df$scores)] <- 0
     
     # Cleans user input for raw finder check
     query <- input$userinput
-    query <- tolower(query)
     query <- removeWords(query, stopwords("english"))
     query <- unlist(strsplit(query, " "))
+    query <- tolower(query)
     query <- paste(query, collapse = "|")
-    
+
     # This for loop gives a document a score of "1" if an exact
     # match of the user's query is returned, excluding stopwords.
     # This for loop encompases a brute force search function.
@@ -64,11 +67,22 @@ server <- function(input, output) {
     for(i in c(1:dim(covid_df)[1])){
       covid_df$scores[i] <- ifelse(
         grepl(query,
-              tolower(covid_df$raw_text[i])),
-        1, covid_df$scores[i])
+              covid_df$raw_text[i],
+              ignore.case = TRUE),
+        1,
+        covid_df$scores[i])
     }
+    
+    # Applies highlighter function ONLY to documents with exact matches.
+    if(any(covid_df$scores == 1)){
+      match_indices <- which(covid_df$scores == 1)
+      for(i in c(1:length(match_indices))){
+      covid_df$html_text[match_indices[i]] <- highlighter_function(
+      covid_df$html_text[match_indices[i]],input$userinput
+      )}
+      }
     covid_df <- covid_df[order(-covid_df$scores),] # sorts by score
-    covid_df
+
   }
   )
   
@@ -98,7 +112,7 @@ server <- function(input, output) {
     # 3) Re-assemble sentences into text
     # 4) renderText(...) to show
     
-    do.call(navlistPanel, c(lapply(1:nTabs,function(i) {
+    do.call(navlistPanel, c(lapply(1:nTabs,function(i){
       tabPanel(
         # Writes the message number and the subject line
         # on the left hand side as a vertical selectable list.
@@ -120,10 +134,10 @@ server <- function(input, output) {
         
         # Title and full text 
         tagList(tags$h4("Full Text")),
-        # Use tags$mark(stuff) to highlight
-        # things.
-        renderText(datasetInput()$raw_text[i],
-                   outputArgs = c(pre))
+
+        #renderText(datasetInput()$raw_text[i],
+        #           outputArgs = list(pre))
+        tagList(HTML(datasetInput()$html_text[i]))
       )
     })))
   })

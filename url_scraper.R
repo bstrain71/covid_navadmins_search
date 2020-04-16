@@ -123,6 +123,10 @@ for(i in c(1:length(covid_df$summaries))){
 #                sentencesAsDocs = TRUE,
 #                returnTies = FALSE,
 #                Verbose = FALSE)
+
+covid_df$html_text <- str_replace_all(covid_df$raw_text, "[\n]", "<br>")
+covid_df$html_text <- str_replace_all(covid_df$html_text, "[\r]", "")
+covid_df$html_text <- paste0("<p>",covid_df$html_text,"</p>")
   
 
 # Save the clean dataframe to be loaded
