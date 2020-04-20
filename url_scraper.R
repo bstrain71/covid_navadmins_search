@@ -11,7 +11,8 @@ library(lexRankr)
 
 # URLS for all relevant messages - these are are all RAW txt when
 # viewed in browser. Don't link to anything that is not raw txt
-urls <- c("https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20104.txt",
+urls <- c("https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20109.txt",
+          "https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20104.txt",
           "https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20101.txt",
           "https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20102.txt",
           "https://www.public.navy.mil/bupers-npc/reference/messages/Documents/NAVADMINS/NAV2020/NAV20100.txt",
